@@ -41,4 +41,6 @@ module "blog_sg" {
   egress_rules        = ["all-all"]
   egress_cidr_blocks  = ["0.0.0.0/0"]
 
+  # Prevent IPv6 rule created by default by the module
+  egress_ipv6_cidr_blocks = []
 }
