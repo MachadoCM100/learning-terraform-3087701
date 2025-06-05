@@ -47,7 +47,7 @@ module "blog_alb" {
 
   vpc_id          = module.blog_vpc.vpc_id
   subnets         = module.blog_vpc.public_subnets
-  security_groups = module.blog_sg.security_group_id
+  security_groups = [module.blog_sg.security_group_id]
 
   target_groups = {
     ex-instance = {
@@ -65,7 +65,7 @@ module "blog_alb" {
       protocol           = "HTTP"
       
       forward = {
-        target_group_key = "instance"
+        target_group_key = ex-instance
       }
     }
   }
