@@ -65,7 +65,7 @@ module "blog_alb" {
       protocol           = "HTTP"
       
       forward = {
-        target_group_key = ex-instance
+        target_group_key = "ex-instance"
       }
     }
   }
