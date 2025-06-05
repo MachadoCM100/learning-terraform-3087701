@@ -35,7 +35,7 @@ module "autoscaling" {
   min_size = 1
   max_size = 2
 
-  vpc_zone_identifier = [module.blog_vpc.public_subnets]
+  vpc_zone_identifier = module.blog_vpc.public_subnets
   
   traffic_source_attachments = {
     traffic_source = {
