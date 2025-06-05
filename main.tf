@@ -40,7 +40,7 @@ module "autoscaling" {
   traffic_source_attachments = {
     traffic_source = {
       type = "elbv2"
-      identifier = module.blog_alb.target_groups.ex-instance.arn
+      traffic_source_identifier = module.blog_alb.target_groups.ex-instance.arn
   }
 }
 
