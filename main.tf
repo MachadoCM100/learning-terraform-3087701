@@ -25,6 +25,31 @@ resource "aws_instance" "blog" {
   }
 }
 
+module "autoscaling" {
+  source  = "terraform-aws-modules/autoscaling/aws"
+  version = "8.3.0"
+  # insert the 1 required variable here
+
+  name = "blog"
+
+  min_size = 1
+  max_size = 2
+
+  vpc_zone_identifier = [module.blog_vpc.public_subnets]
+  
+  traffic_source_attachments = {
+    traffic_source = {
+      type = "elbv2"
+      identifier = module.blog_alb.target_groups.ex-instance.arn
+  }
+}
+
+  security_groups = [module.blog_sg.security_group_id]
+
+  image_id               = data.aws_ami.app_ami.id
+  instance_type          = var.instance_type
+}
+
 module "blog_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -56,6 +81,7 @@ module "blog_alb" {
       port             = 80
       target_type      = "instance"
       target_id        = aws_instance.blog.id
+      create_attachment = false
     }
   }
 
