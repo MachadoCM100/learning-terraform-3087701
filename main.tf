@@ -43,7 +43,7 @@ module "blog_vpc" {
 module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
 
-  name    = "blog-alb"
+  name   = "blog-alb"
 
   vpc_id          = module.blog_vpc.vpc_id
   subnets         = module.blog_vpc.public_subnets
@@ -59,11 +59,14 @@ module "blog_alb" {
     }
   }
 
-  http_tcp_listeners = {
-    {
+  listeners = {
+    http = {
       port               = 80
       protocol           = "HTTP"
-      target_group_index = 0
+      
+      forward = {
+        target_group_key = "instance"
+      }
     }
   }
 
