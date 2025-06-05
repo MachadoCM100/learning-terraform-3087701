@@ -14,17 +14,6 @@ data "aws_ami" "app_ami" {
   owners = ["979382823631"] # Bitnami
 }
 
-resource "aws_instance" "blog" {
-  ami                    = data.aws_ami.app_ami.id
-  instance_type          = var.instance_type
-
-  vpc_security_group_ids = [module.blog_sg.security_group_id]
-
-  tags = {
-    Name = "Learning Terraform"
-  }
-}
-
 module "autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "8.3.0"
