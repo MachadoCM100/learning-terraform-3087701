@@ -19,7 +19,7 @@ variable "ami_tomcat_info" {
   })
 
   default = {
-    server              = "bitnami-tomcat-*-x86_64-hvm-ebs-nami"
+    server_name              = "bitnami-tomcat-*-x86_64-hvm-ebs-nami"
     owner               = "979382823631"
     virtualization_type = "hvm"
   }
