@@ -3,15 +3,15 @@ data "aws_ami" "app_ami" {
 
   filter {
     name   = "name"
-    values = ["bitnami-tomcat-*-x86_64-hvm-ebs-nami"]
+    values = [var.ami_tomcat_info.server_name]
   }
 
   filter {
     name   = "virtualization-type"
-    values = ["hvm"]
+    values = [var.ami_tomcat_info.virtualization_type]
   }
 
-  owners = ["979382823631"] # Bitnami
+  owners = [var.ami_tomcat_info.owner]
 }
 
 module "autoscaling" {
@@ -19,10 +19,10 @@ module "autoscaling" {
   version = "8.3.0"
   # insert the 1 required variable here
 
-  name = "blog"
+  name = var.app_name
 
-  min_size = 1
-  max_size = 2
+  min_size = var.min_size_slg
+  max_size = var.max_size_slg
 
   vpc_zone_identifier = module.blog_vpc.public_subnets
   
@@ -42,22 +42,22 @@ module "autoscaling" {
 module "blog_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "dev"
-  cidr = "10.0.0.0/16"
+  name = var.dev_env.name
+  cidr = "${var.dev_env.network_prefix}0.0/16"
 
   azs             = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  public_subnets  = ["${var.dev_env.network_prefix}101.0/24", "${var.dev_env.network_prefix}102.0/24", "${var.dev_env.network_prefix}103.0/24"]
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.dev_env.name
   }
 }
 
 module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
 
-  name   = "blog-alb"
+  name   = "${var.app_name}-alb"
 
   vpc_id          = module.blog_vpc.vpc_id
   subnets         = module.blog_vpc.public_subnets
@@ -65,7 +65,7 @@ module "blog_alb" {
 
   target_groups = {
     ex-instance = {
-      name_prefix      = "blog-"
+      name_prefix      = "${var.app_name}-"
       protocol         = "HTTP"
       port             = 80
       target_type      = "instance"
@@ -85,14 +85,14 @@ module "blog_alb" {
   }
 
   tags = {
-    Environment = "dev"
+    Environment = var.dev_env.name
   }
 }
 
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.3.0"
-  name    = "blog_new"
+  name    = "${var.app_name}_new"
 
   vpc_id              = module.blog_vpc.vpc_id
 
