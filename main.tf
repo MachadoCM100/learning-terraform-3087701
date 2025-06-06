@@ -45,7 +45,7 @@ module "blog_vpc" {
   name = var.dev_env.name
   cidr = "${var.dev_env.network_prefix}0.0/16"
 
-  azs             = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
+  azs             = var.eu_azs
   public_subnets  = ["${var.dev_env.network_prefix}101.0/24", "${var.dev_env.network_prefix}102.0/24", "${var.dev_env.network_prefix}103.0/24"]
 
   tags = {
