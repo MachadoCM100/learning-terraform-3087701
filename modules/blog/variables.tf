@@ -35,8 +35,8 @@ variable "max_size_slg" {
   default     = 2
 }
 
-variable "dev_env" {
-  description = "Development environment prefix for name and network"
+variable "environment" {
+  description = "Environment prefix for name and network"
 
   type = object ({
     name      = string
