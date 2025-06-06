@@ -1,7 +1,7 @@
 variable "app_name" {
   description = "The application name to use in AWS' resources"
 
-  deafult = "blog"
+  default = "blog"
 }
 
 variable "instance_type" {
@@ -52,5 +52,5 @@ variable "dev_env" {
 variable eu_azs {
   description = "The availability zones in Europe"
 
-  deafult = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
+  default = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
 }
